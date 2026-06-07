@@ -20,15 +20,18 @@ jobs:
         with:
           python-version: '3.12'
 
-     - name: Install Packages
-  run: |
-    pip install pandas requests playwright
+      - name: Install Packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests playwright
 
-- name: Install Browser
-  run: playwright install chromium
+      - name: Install Chromium
+        run: |
+          playwright install chromium
 
       - name: Run Tracker
-        run: python tracker.py
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_ID }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python tracker.py
