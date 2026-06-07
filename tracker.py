@@ -58,6 +58,10 @@ def get_price(url):
 
         text = page.locator("body").inner_text()
 
+print("=" * 50)
+print(text[:5000])
+print("=" * 50)
+
         browser.close()
 
         return extract_price(text)
