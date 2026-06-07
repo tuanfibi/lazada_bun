@@ -1,53 +1,67 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+
 
 class Tracker:
     def __init__(self):
         self.driver = None
 
-    def start_browser(self):
+    def start(self):
         options = Options()
-        options.add_argument("--headless")  # chạy nền
+        options.add_argument("--headless=new")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
 
-        self.driver = webdriver.Chrome(options=options)
+        self.driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options
+        )
 
-    def check_item(self, url, name):
+    def check(self, name, url):
         try:
+            print(f"Checking {name}")
             self.driver.get(url)
             time.sleep(3)
 
             title = self.driver.title
-            print(f"Checking {name}")
+            print("Title:", title)
 
             if name.lower() in title.lower():
-                print(f"[FOUND] {name}")
+                print(f"✅ FOUND: {name}")
             else:
-                print(f"[NOT FOUND] {name}")
+                print(f"❌ NOT FOUND: {name}")
 
         except Exception as e:
-            print(f"[ERROR] {name}: {e}")
+            print(f"⚠️ ERROR {name}: {e}")
 
-    def close(self):
+    def stop(self):
         if self.driver:
             self.driver.quit()
 
 
 def main():
     tracker = Tracker()
-    tracker.start_browser()
+    tracker.start()
 
     items = [
-        {"name": "HiBy FC5", "url": "https://example.com/fc5"},
-        {"name": "Misheng Gemini", "url": "https://example.com/gemini"},
+        {
+            "name": "HiBy FC5",
+            "url": "https://example.com/fc5"
+        },
+        {
+            "name": "Misheng Gemini",
+            "url": "https://example.com/gemini"
+        }
     ]
 
     for item in items:
-        tracker.check_item(item["url"], item["name"])
+        tracker.check(item["name"], item["url"])
 
-    tracker.close()
+    tracker.stop()
 
 
 if __name__ == "__main__":
