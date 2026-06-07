@@ -20,9 +20,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Packages
-        run: |
-          pip install pandas requests
+     - name: Install Packages
+  run: |
+    pip install pandas requests playwright
+
+- name: Install Browser
+  run: playwright install chromium
 
       - name: Run Tracker
         run: python tracker.py
